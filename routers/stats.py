@@ -1,14 +1,14 @@
 from fastapi import APIRouter
 
-from routers.tasks import tasks_db  # общее временное хранилище задач
+from database import tasks_db  # единое хранилище задач
 
 router = APIRouter(
-    prefix="/tasks/stats",  # итоговый путь: GET /tasks/stats
-    tags=["statistics"],    # отдельная группа в Swagger UI
+    prefix="/stats",      # все endpoints роутера начинаются с /stats
+    tags=["statistics"],  # отдельная группа в Swagger UI
 )
 
 
-@router.get("")
+@router.get("/")
 async def get_tasks_stats() -> dict:
     by_quadrant = {"Q1": 0, "Q2": 0, "Q3": 0, "Q4": 0}
     completed = 0

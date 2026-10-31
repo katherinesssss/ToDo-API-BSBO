@@ -11,11 +11,9 @@ app = FastAPI(
     },
 )
 
-# Подключение роутеров к приложению.
-# stats подключаем РАНЬШЕ tasks, чтобы /tasks/stats не попал
-# под динамический маршрут /tasks/{task_id}.
-app.include_router(stats.router)
-app.include_router(tasks.router)
+# Подключение роутеров к приложению с версионным префиксом
+app.include_router(tasks.router, prefix="/api/v1")
+app.include_router(stats.router, prefix="/api/v1")
 
 
 @app.get("/")
@@ -27,10 +25,3 @@ async def welcome() -> dict:
         "api_version": app.version,
         "api_author": app.contact["name"],
     }
-
-
-# Простой POST-запрос без валидации (task: dict — "что угодно").
-# Нужен для демонстрации: далее его заменит модель Pydantic.
-@app.post("/tasks")
-async def create_task(task: dict):
-    return {"message": "Запись успешно создана!", "task": task}
